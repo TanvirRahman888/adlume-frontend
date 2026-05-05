@@ -1,52 +1,108 @@
-const items = [
-  ["Result Focused", "We focus on reach, engagement, leads, and growth."],
-  ["Creative Strategy", "Every campaign is planned with design and audience in mind."],
-  ["Transparent Reporting", "You get clear updates and performance insights."],
-  ["Reliable Partner", "We work with you step by step to grow your brand."],
+import { BarChart3, Handshake, Lightbulb, Target } from "lucide-react";
+
+const features = [
+  {
+    title: "Result Focused",
+    description: "We focus on actions that bring real results, not just vanity metrics.",
+    icon: Target,
+    color: "#0080E0",
+  },
+  {
+    title: "Creative Strategy",
+    description: "Creative ideas combined with smart strategy to grow your brand.",
+    icon: Lightbulb,
+    color: "#F0B000",
+  },
+  {
+    title: "Transparent Reporting",
+    description: "Clear reports so you always know how your business is performing.",
+    icon: BarChart3,
+    color: "#00B0F0",
+  },
+  {
+    title: "Client Satisfaction",
+    description: "Your success is our priority. We work together to achieve your goals.",
+    icon: Handshake,
+    color: "#F08000",
+  },
 ];
 
 export default function WhyChooseUs() {
   return (
     <section
-      className="px-4 py-20 sm:px-6 lg:px-10"
+      className="py-16"
       style={{ background: "var(--background-secondary)" }}
     >
-      <div className="grid gap-10 lg:grid-cols-2 lg:items-center">
-        <div>
-          <p className="text-sm font-black uppercase tracking-[0.25em] text-[#F0B000]">
-            Why Choose Us
-          </p>
-          <h2 className="mt-4 text-4xl font-black md:text-5xl">
-            We Don’t Just Do Marketing, We Drive Growth.
-          </h2>
-          <p
-            className="mt-5 leading-8"
-            style={{ color: "var(--text-muted)" }}
-          >
-            Adlume Media combines creativity, strategy, and performance to help
-            your business look professional and reach the right customers.
-          </p>
-        </div>
+      <div className="mx-auto w-full max-w-360 px-4 sm:px-6 lg:px-10">
+        <div
+          className="grid gap-10 rounded-4xl border p-6 md:p-8 lg:grid-cols-[0.9fr_1.6fr]"
+          style={{
+            borderColor: "var(--border)",
+            background: "var(--card)",
+          }}
+        >
+          {/* Left Content */}
+          <div className="flex flex-col justify-center">
+            <p className="text-sm font-black uppercase tracking-[0.22em] text-[#0080E0]">
+              Why Choose Us
+            </p>
 
-        <div className="grid gap-5 sm:grid-cols-2">
-          {items.map(([title, text]) => (
-            <div
-              key={title}
-              className="rounded-3xl border p-6"
-              style={{
-                borderColor: "var(--border)",
-                background: "var(--card)",
-              }}
+            <h2 className="mt-4 text-3xl font-black leading-tight md:text-4xl">
+              We Don’t Just Do Marketing, <br />
+              We{" "}
+              <span className="bg-linear-to-r from-[#0080E0] to-[#00B0F0] bg-clip-text text-transparent">
+                Drive Growth.
+              </span>
+            </h2>
+
+            <p
+              className="mt-5 max-w-xl text-sm leading-7 md:text-base"
+              style={{ color: "var(--text-muted)" }}
             >
-              <h3 className="text-xl font-black">{title}</h3>
-              <p
-                className="mt-3 leading-7"
-                style={{ color: "var(--text-muted)" }}
-              >
-                {text}
-              </p>
-            </div>
-          ))}
+              We combine creativity, strategy, and data to deliver real results
+              for your business.
+            </p>
+          </div>
+
+          {/* Right Features */}
+          <div className="grid gap-5 sm:grid-cols-2 xl:grid-cols-4">
+            {features.map((feature, index) => {
+              const Icon = feature.icon;
+
+              return (
+                <div
+                  key={feature.title}
+                  className={`group relative p-4 ${
+                    index !== 0 ? "xl:border-l" : ""
+                  }`}
+                  style={{ borderColor: "var(--border)" }}
+                >
+                  <div className="flex items-start gap-4 xl:block">
+                    <div
+                      className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl transition duration-300 group-hover:scale-110"
+                      style={{
+                        color: feature.color,
+                        background: `${feature.color}18`,
+                      }}
+                    >
+                      <Icon size={28} strokeWidth={2.5} />
+                    </div>
+
+                    <div className="xl:mt-5">
+                      <h3 className="text-base font-black">{feature.title}</h3>
+
+                      <p
+                        className="mt-3 text-sm leading-6"
+                        style={{ color: "var(--text-muted)" }}
+                      >
+                        {feature.description}
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
         </div>
       </div>
     </section>
