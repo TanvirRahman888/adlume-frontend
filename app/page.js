@@ -1,16 +1,21 @@
+import Container from "@/components/Container";
+import HeroSection from "@/components/home/HeroSection";
+import HomeCTA from "@/components/home/HomeCTA";
+import ProcessSection from "@/components/home/ProcessSection";
+import ServicesPreview from "@/components/home/ServicesPreview";
+import WhyChooseUs from "@/components/home/WhyChooseUs";
 import ThemeToggle from "@/components/ThemeToggle";
 
 export default function Home() {
   return (
-    <main className="min-h-screen p-10">
-      <ThemeToggle />
-
-      <section className="mt-10">
-        <h1 className="text-5xl font-bold">Adlume Media</h1>
-        <p className="mt-4 text-xl" style={{ color: "var(--text-muted)" }}>
-          Helping Brands Get Seen, Clicked, and Chosen.
-        </p>
-      </section>
+    <main className="">
+        <HeroSection />
+      <Container>
+        <ServicesPreview />
+        <WhyChooseUs />
+        <ProcessSection />
+        <HomeCTA />
+      </Container>
     </main>
   );
 }
