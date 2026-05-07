@@ -1,44 +1,87 @@
-const steps = [
-  ["01", "Discover", "We learn about your business, goals, and audience."],
-  ["02", "Strategy", "We create a custom plan for growth."],
-  ["03", "Create", "We design content, ads, branding, and web assets."],
-  ["04", "Launch", "We publish campaigns and start reaching your audience."],
-  ["05", "Grow", "We analyze, improve, and scale your results."],
+import Container from "@/components/Container";
+import ProcessCard from "@/components/home/ProcessCard";
+import {
+  SearchCheck,
+  ClipboardList,
+  PencilLine,
+  Rocket,
+  ChartNoAxesCombined,
+} from "lucide-react";
+
+const processSteps = [
+  {
+    number: "01",
+    title: "Discover",
+    description: "We learn about your business, goals, and target audience.",
+    icon: SearchCheck,
+    color: "#0080E0",
+  },
+  {
+    number: "02",
+    title: "Strategy",
+    description: "We create a customized strategy that fits your goals.",
+    icon: ClipboardList,
+    color: "#00B0F0",
+  },
+  {
+    number: "03",
+    title: "Create",
+    description: "We design, develop, and create with purpose.",
+    icon: PencilLine,
+    color: "#F08000",
+  },
+  {
+    number: "04",
+    title: "Launch",
+    description: "We launch the campaign and start delivering.",
+    icon: Rocket,
+    color: "#F0B000",
+  },
+  {
+    number: "05",
+    title: "Grow",
+    description: "We analyze, optimize, and scale your growth.",
+    icon: ChartNoAxesCombined,
+    color: "#0080E0",
+  },
 ];
 
 export default function ProcessSection() {
   return (
-    <section className="px-4 py-20 sm:px-6 lg:px-10">
-      <div className="mx-auto max-w-3xl text-center">
-        <p className="text-sm font-black uppercase tracking-[0.25em] text-[#00B0F0]">
-          Our Process
-        </p>
-        <h2 className="mt-4 text-4xl font-black md:text-5xl">
-          Our 5-Step Process to Success
-        </h2>
-      </div>
+    <section className="py-20 sm:py-24">
+      <Container>
+        <div className="mx-auto max-w-3xl text-center">
+          <p className="text-sm font-black uppercase tracking-[0.25em] text-[#00B0F0]">
+            Our Process
+          </p>
 
-      <div className="mt-12 grid gap-5 md:grid-cols-5">
-        {steps.map(([number, title, text]) => (
-          <div
-            key={title}
-            className="rounded-3xl border p-6"
-            style={{
-              borderColor: "var(--border)",
-              background: "var(--card)",
-            }}
+          <h2 className="mt-4 text-4xl font-black leading-tight md:text-5xl">
+            Our 5-Step Process to Success
+          </h2>
+
+          <p
+            className="mt-5 text-base leading-7 md:text-lg"
+            style={{ color: "var(--text-muted)" }}
           >
-            <p className="text-sm font-black text-[#F08000]">{number}</p>
-            <h3 className="mt-4 text-xl font-black">{title}</h3>
-            <p
-              className="mt-3 text-sm leading-7"
-              style={{ color: "var(--text-muted)" }}
-            >
-              {text}
-            </p>
-          </div>
-        ))}
-      </div>
+            From discovery to growth, we follow a clear process that keeps your
+            brand moving in the right direction.
+          </p>
+        </div>
+
+        <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-5 lg:gap-4">
+          {processSteps.map((step, index) => (
+            <ProcessCard
+              key={step.number}
+              number={step.number}
+              title={step.title}
+              description={step.description}
+              icon={step.icon}
+              color={step.color}
+              showArrow={index !== processSteps.length - 1}
+            />
+          ))}
+        </div>
+      </Container>
     </section>
   );
 }
