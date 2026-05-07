@@ -1,6 +1,7 @@
 import Container from "@/components/Container";
 import HeroSection from "@/components/home/HeroSection";
 import HomeCTA from "@/components/home/HomeCTA";
+import PriceSection from "@/components/home/PriceSection";
 import ProcessSection from "@/components/home/ProcessSection";
 import RecentProjects from "@/components/home/RecentProjects";
 import ServicesPreview from "@/components/home/ServicesPreview";
@@ -16,6 +17,7 @@ export default function Home() {
         <WhyChooseUs />
         <RecentProjects />
         <ProcessSection />
+        <PriceSection />
         <HomeCTA />
       </Container>
     </main>
