@@ -48,9 +48,11 @@ const processSteps = [
 
 export default function ProcessSection() {
   return (
-    <section className="py-20 sm:py-24">
-      <Container>
-        <div className="mx-auto max-w-3xl text-center">
+    <section className="relative overflow-hidden py-20 sm:py-24">
+      <div className="pointer-events-none absolute left-1/2 top-1/2 h-80 w-160 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#0080E0]/8 blur-3xl" />
+
+      <Container className="relative">
+        <div className="mx-auto text-center">
           <p className="text-sm font-black uppercase tracking-[0.25em] text-[#00B0F0]">
             Our Process
           </p>
@@ -68,7 +70,7 @@ export default function ProcessSection() {
           </p>
         </div>
 
-        <div className="mt-14 grid gap-5 sm:grid-cols-2 lg:grid-cols-5 lg:gap-4">
+        <div className="mt-14 grid items-stretch gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-5">
           {processSteps.map((step, index) => (
             <ProcessCard
               key={step.number}

@@ -54,14 +54,14 @@ export default function HeroSection() {
       >
         {slides.map((slide, index) => (
           <SwiperSlide key={slide.image}>
-            <div className="relative flex h-full w-full items-center justify-center overflow-hidden">
+            <div className="relative h-full w-full overflow-hidden">
               <Image
                 src={slide.image}
                 alt={slide.alt}
-                width={1920}
-                height={900}
+                fill
                 priority={index === 0}
-                className="h-full w-full object-cover"
+                sizes="100vw"
+                className="object-cover"
               />
             </div>
           </SwiperSlide>

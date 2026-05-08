@@ -1,4 +1,5 @@
 import Container from "@/components/Container";
+import ClientFeedbackSection from "@/components/home/ClientFeedbackSection";
 import HeroSection from "@/components/home/HeroSection";
 import HomeCTA from "@/components/home/HomeCTA";
 import PriceSection from "@/components/home/PriceSection";
@@ -18,6 +19,7 @@ export default function Home() {
         <RecentProjects />
         <ProcessSection />
         <PriceSection />
+        <ClientFeedbackSection />
         <HomeCTA />
       </Container>
     </main>

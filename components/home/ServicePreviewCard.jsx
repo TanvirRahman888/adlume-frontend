@@ -11,7 +11,7 @@ export default function ServicePreviewCard({
   return (
     <Link
       href={href}
-      className="group relative flex h-full min-h-97.5 flex-col overflow-hidden rounded-3xl border p-6 transition duration-300 hover:-translate-y-2"
+      className="group relative flex h-full flex-col overflow-hidden rounded-3xl border p-6 transition duration-300 hover:-translate-y-2"
       style={{
         borderColor: "var(--border)",
         background: "var(--card)",
@@ -53,16 +53,6 @@ export default function ServicePreviewCard({
         >
           {description}
         </p>
-
-        <div className="mt-auto pt-6">
-          <div className="inline-flex items-center gap-2 text-sm font-black text-[#F08000] transition duration-300 group-hover:gap-3 group-hover:text-[#00B0F0]">
-            View Details
-            <ArrowRight
-              size={18}
-              className="transition duration-300 group-hover:translate-x-1"
-            />
-          </div>
-        </div>
       </div>
     </Link>
   );
