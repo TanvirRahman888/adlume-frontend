@@ -10,7 +10,7 @@ export default function RecentProjectsCard({
   return (
     <Link href={href} className="group block">
       <div className="overflow-hidden rounded-2xl shadow-md transition duration-300 group-hover:-translate-y-2 group-hover:shadow-xl">
-        <div className="relative h-64 overflow-hidden rounded-2xl">
+        <div className="relative aspect-6/4 w-full overflow-hidden rounded-2xl">
           <Image
             src={image}
             alt={title}
