@@ -104,7 +104,7 @@ export default function ServicesGrid() {
           </p>
         </div>
 
-        <div className="mt-14 grid items-stretch gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-7">
+        <div className="mt-14 grid items-stretch gap-6 sm:grid-cols-2 lg:grid-cols-3 ">
           {services.map((service) => (
             <ServicePageCard
               key={service.title}
