@@ -24,13 +24,13 @@ const services = [
   "Content Creation",
   "Graphic Design & Branding",
   "Web Design & Development",
-  "Lead Generation",
+  "AI Automation",
 ];
 
 const socialLinks = [
   {
     name: "Facebook",
-    href: "https://www.facebook.com/adlumemedia",
+    href: "https://www.facebook.com/adlumemediabd",
     icon: FaFacebook,
   },
   {
@@ -88,7 +88,7 @@ export default function Footer() {
                 style={{ color: "var(--text-muted)" }}
               >
                 Helping brands get seen, clicked, and chosen through smart
-                digital marketing, branding, lead generation, and web solutions.
+                digital marketing, branding, AI Automation, and web solutions.
               </p>
 
               <div className="mt-6 flex items-center gap-3">
