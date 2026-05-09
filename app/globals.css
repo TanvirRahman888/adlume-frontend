@@ -110,6 +110,12 @@ body {
 
 /* review-swiper */
 
+.line-clamp-7 {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
 .adlume-review-swiper .swiper-slide {
   height: auto;
 }
