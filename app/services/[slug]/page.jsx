@@ -1,18 +1,32 @@
 import { notFound } from "next/navigation";
-import { getServiceBySlug, servicesData } from "@/data/servicesData";
 import ServiceDetailsHero from "@/components/services/ServiceDetailsHero";
 import ServiceDetailsContent from "@/components/services/ServiceDetailsContent";
 import ServiceDetailsCTA from "@/components/services/ServiceDetailsCTA";
 
-export function generateStaticParams() {
-  return servicesData.map((service) => ({
-    slug: service.slug,
-  }));
+async function getService(slug) {
+  try {
+    const response = await fetch(
+      `${process.env.NEXT_PUBLIC_API_URL}/api/services/${slug}`,
+      {
+        cache: "no-store",
+      }
+    );
+
+    if (!response.ok) {
+      return null;
+    }
+
+    const data = await response.json();
+
+    return data.service || null;
+  } catch (error) {
+    return null;
+  }
 }
 
 export async function generateMetadata({ params }) {
   const { slug } = await params;
-  const service = getServiceBySlug(slug);
+  const service = await getService(slug);
 
   if (!service) {
     return {
@@ -28,7 +42,7 @@ export async function generateMetadata({ params }) {
 
 export default async function ServiceDetailsPage({ params }) {
   const { slug } = await params;
-  const service = getServiceBySlug(slug);
+  const service = await getService(slug);
 
   if (!service) {
     notFound();

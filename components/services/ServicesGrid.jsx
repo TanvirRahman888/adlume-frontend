@@ -1,73 +1,45 @@
+"use client";
+
+import { useEffect, useState } from "react";
 import ServicePageCard from "./ServicePageCard";
 
-const services = [
-  {
-    title: "Digital Marketing",
-    description:
-      "Complete online marketing solutions to grow your visibility, attract customers, and build a stronger brand presence.",
-    icon: "/images/services/digital-marketing.png",
-    href: "/services/digital-marketing",
-    points: ["Growth strategy", "Campaign planning", "Performance tracking"],
-  },
-  {
-    title: "Social Media Marketing",
-    description:
-      "Strategic page management, content planning, and audience engagement to grow your social presence.",
-    icon: "/images/services/social-media-marketing.png",
-    href: "/services/social-media-marketing",
-    points: ["Content planning", "Page management", "Audience engagement"],
-  },
-  {
-    title: "Facebook & Instagram Ads",
-    description:
-      "Targeted ad campaigns designed to generate leads, messages, website traffic, and sales.",
-    icon: "/images/services/facebook-instagram-ads.png",
-    href: "/services/facebook-instagram-ads",
-    points: ["Ad setup", "Audience targeting", "Lead campaigns"],
-  },
-  {
-    title: "Content Creation",
-    description:
-      "Creative captions, post designs, promotional content, and campaign ideas for consistent brand activity.",
-    icon: "/images/services/content-creation.png",
-    href: "/services/content-creation",
-    points: ["Post ideas", "Caption writing", "Campaign content"],
-  },
-  {
-    title: "Graphic Design & Branding",
-    description:
-      "Professional visuals, logos, brand assets, and creative designs that make your business stand out.",
-    icon: "/images/services/graphic-design-branding.png",
-    href: "/services/graphic-design-branding",
-    points: ["Brand identity", "Social designs", "Promotional graphics"],
-  },
-  {
-    title: "Web Design & Development",
-    description:
-      "Modern, responsive, and conversion-focused websites that build trust and turn visitors into inquiries.",
-    icon: "/images/services/web-design-development.png",
-    href: "/services/web-design-development",
-    points: ["Responsive design", "Landing pages", "Conversion layout"],
-  },
-  {
-    title: "Lead Generation",
-    description:
-      "Smart campaigns and funnels designed to bring potential customers through messages, calls, and forms.",
-    icon: "/images/services/lead-generation.png",
-    href: "/services/lead-generation",
-    points: ["Lead funnels", "WhatsApp leads", "Form campaigns"],
-  },
-  {
-    title: "Google Local Business Setup",
-    description:
-      "Google Business Profile setup and optimization to help local customers find you on Search and Maps.",
-    icon: "/images/services/google-local-business.png",
-    href: "/services/google-local-business-setup",
-    points: ["Profile setup", "Map visibility", "Local optimization"],
-  },
-];
-
 export default function ServicesGrid() {
+  const [services, setServices] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState("");
+
+  useEffect(() => {
+    async function fetchServices() {
+      try {
+        setIsLoading(true);
+        setErrorMessage("");
+
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/services`,
+          {
+            cache: "no-store",
+          }
+        );
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data?.message || "Failed to fetch services.");
+        }
+
+        setServices(data.services || []);
+      } catch (error) {
+        setErrorMessage(
+          error.message || "Something went wrong while loading services."
+        );
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    fetchServices();
+  }, []);
+
   return (
     <section className="relative overflow-hidden py-20 sm:py-24">
       <div className="pointer-events-none absolute left-0 top-20 h-96 w-96 rounded-full bg-[#0080E0]/10 blur-3xl" />
@@ -104,18 +76,76 @@ export default function ServicesGrid() {
           </p>
         </div>
 
-        <div className="mt-14 grid items-stretch gap-6 sm:grid-cols-2 lg:grid-cols-3 ">
-          {services.map((service) => (
-            <ServicePageCard
-              key={service.title}
-              title={service.title}
-              description={service.description}
-              icon={service.icon}
-              href={service.href}
-              points={service.points}
-            />
-          ))}
-        </div>
+        {isLoading && (
+          <div className="mt-14 grid items-stretch gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-7">
+            {Array.from({ length: 8 }).map((_, index) => (
+              <div
+                key={index}
+                className="min-h-97.5 animate-pulse rounded-4xl border"
+                style={{
+                  borderColor: "var(--border)",
+                  background:
+                    "color-mix(in srgb, var(--card) 85%, transparent)",
+                }}
+              />
+            ))}
+          </div>
+        )}
+
+        {errorMessage && (
+          <div
+            className="mx-auto mt-14 max-w-2xl rounded-4xl border p-8 text-center"
+            style={{
+              borderColor: "var(--border)",
+              background: "var(--card)",
+            }}
+          >
+            <h3 className="text-2xl font-black text-[#F08000]">
+              Failed to load services
+            </h3>
+
+            <p
+              className="mt-3 text-sm leading-7"
+              style={{ color: "var(--text-muted)" }}
+            >
+              {errorMessage}
+            </p>
+          </div>
+        )}
+
+        {!isLoading && !errorMessage && services.length > 0 && (
+          <div className="mt-14 grid items-stretch gap-6 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 xl:gap-7">
+            {services.map((service) => (
+              <ServicePageCard
+                key={service._id}
+                title={service.title}
+                description={service.shortDescription}
+                icon={service.icon}
+                href={`/services/${service.slug}`}
+                points={service.features?.slice(0, 3) || []}
+              />
+            ))}
+          </div>
+        )}
+
+        {!isLoading && !errorMessage && services.length === 0 && (
+          <div
+            className="mt-14 rounded-4xl border p-10 text-center"
+            style={{
+              borderColor: "var(--border)",
+              background: "var(--card)",
+            }}
+          >
+            <h3 className="text-2xl font-black">No services found</h3>
+
+            <p
+              className="mt-3 text-sm leading-7"
+              style={{ color: "var(--text-muted)" }}
+            >
+              No service items are available yet.
+            </p>
+          </div>
+        )}
       </div>
     </section>
   );

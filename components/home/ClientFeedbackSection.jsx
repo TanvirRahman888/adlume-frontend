@@ -1,71 +1,12 @@
 "use client";
 
-import { useState } from "react";
-import { Star, X } from "lucide-react";
+import { useEffect, useState } from "react";
+import { Star, X, CheckCircle2 } from "lucide-react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { Autoplay, Pagination } from "swiper/modules";
 
 import "swiper/css";
 import "swiper/css/pagination";
-
-const reviews = [
-  {
-    name: "Rahim Ahmed",
-    business: "Local Restaurant Owner",
-    time: "3 hours ago",
-    feedback:
-      "Adlume Media helped us improve our social media presence and reach more local customers. The designs were clean, professional, and result-focused. Their team was friendly, fast, and easy to communicate with throughout the whole campaign.",
-    rating: 5,
-  },
-  {
-    name: "Nusrat Jahan",
-    business: "Fashion Boutique",
-    time: "1 day ago",
-    feedback:
-      "Their Facebook and Instagram ad strategy helped us get more messages and sales. Communication was smooth and the team understood our brand very well.",
-    rating: 5,
-  },
-  {
-    name: "Tanvir Hasan",
-    business: "Startup Founder",
-    time: "2 days ago",
-    feedback:
-      "We needed a professional online presence, and Adlume Media delivered exactly that. Their content planning and design support were very helpful.",
-    rating: 5,
-  },
-  {
-    name: "Sadia Islam",
-    business: "Beauty Salon",
-    time: "4 days ago",
-    feedback:
-      "The team created beautiful promotional content for our salon. We started getting more inquiries from Facebook after working with them.",
-    rating: 5,
-  },
-  {
-    name: "Mahmudul Karim",
-    business: "E-commerce Business",
-    time: "1 week ago",
-    feedback:
-      "Their lead generation and ad management service helped us reach the right audience. The reports were clear and easy to understand.",
-    rating: 5,
-  },
-  {
-    name: "Farhana Akter",
-    business: "Training Center",
-    time: "1 week ago",
-    feedback:
-      "Adlume Media designed our campaign materials and managed our page professionally. We loved their creative ideas and fast support.",
-    rating: 5,
-  },
-  {
-    name: "Imran Hossain",
-    business: "Real Estate Consultant",
-    time: "2 weeks ago",
-    feedback:
-      "They helped us create a strong digital presence with better branding and content. The overall experience was professional and reliable.",
-    rating: 5,
-  },
-];
 
 function ReviewCard({ review, onReadMore }) {
   const isLongReview = review.feedback.length > 150;
@@ -80,14 +21,12 @@ function ReviewCard({ review, onReadMore }) {
       }}
     >
       <div className="flex items-center gap-3">
-        <div className="relative">
-          <div className="flex h-11 w-11 items-center justify-center rounded-full bg-linear-to-br from-[#0080E0] to-[#00B0F0] text-sm font-black text-white">
-            {review.name
-              .split(" ")
-              .map((word) => word[0])
-              .join("")
-              .slice(0, 2)}
-          </div>
+        <div className="flex h-11 w-11 items-center justify-center rounded-full bg-linear-to-br from-[#0080E0] to-[#00B0F0] text-sm font-black text-white">
+          {review.name
+            .split(" ")
+            .map((word) => word[0])
+            .join("")
+            .slice(0, 2)}
         </div>
 
         <div>
@@ -131,7 +70,42 @@ function ReviewCard({ review, onReadMore }) {
 }
 
 export default function ClientFeedbackSection() {
+  const [reviews, setReviews] = useState([]);
   const [selectedReview, setSelectedReview] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState("");
+
+  useEffect(() => {
+    async function fetchReviews() {
+      try {
+        setIsLoading(true);
+        setErrorMessage("");
+
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/reviews?featured=true`,
+          {
+            cache: "no-store",
+          }
+        );
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data?.message || "Failed to fetch reviews.");
+        }
+
+        setReviews(data.reviews || []);
+      } catch (error) {
+        setErrorMessage(
+          error.message || "Something went wrong while loading reviews."
+        );
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    fetchReviews();
+  }, []);
 
   return (
     <section className="relative overflow-hidden py-20 sm:py-24">
@@ -169,41 +143,102 @@ export default function ClientFeedbackSection() {
           </p>
         </div>
 
-        <div className="mt-12">
-          <Swiper
-            modules={[Autoplay, Pagination]}
-            spaceBetween={24}
-            slidesPerView={1}
-            loop={true}
-            speed={800}
-            autoplay={{
-              delay: 3500,
-              disableOnInteraction: false,
-              pauseOnMouseEnter: true,
-            }}
-            pagination={{
-              clickable: true,
-            }}
-            breakpoints={{
-              640: {
-                slidesPerView: 1,
-              },
-              768: {
-                slidesPerView: 2,
-              },
-              1180: {
-                slidesPerView: 3,
-              },
-            }}
-            className="adlume-review-swiper pb-14"
-          >
-            {reviews.map((review) => (
-              <SwiperSlide key={review.name} className="h-auto">
-                <ReviewCard review={review} onReadMore={setSelectedReview} />
-              </SwiperSlide>
+        {isLoading && (
+          <div className="mt-12 grid gap-6 md:grid-cols-2 xl:grid-cols-3">
+            {Array.from({ length: 3 }).map((_, index) => (
+              <div
+                key={index}
+                className="min-h-62.5 animate-pulse rounded-3xl border"
+                style={{
+                  borderColor: "var(--border)",
+                  background:
+                    "color-mix(in srgb, var(--card) 85%, transparent)",
+                }}
+              />
             ))}
-          </Swiper>
-        </div>
+          </div>
+        )}
+
+        {errorMessage && (
+          <div
+            className="mx-auto mt-12 max-w-2xl rounded-4xl border p-8 text-center"
+            style={{
+              borderColor: "var(--border)",
+              background: "var(--card)",
+            }}
+          >
+            <h3 className="text-2xl font-black text-[#F08000]">
+              Failed to load reviews
+            </h3>
+
+            <p
+              className="mt-3 text-sm leading-7"
+              style={{ color: "var(--text-muted)" }}
+            >
+              {errorMessage}
+            </p>
+          </div>
+        )}
+
+        {!isLoading && !errorMessage && reviews.length > 0 && (
+          <div className="mt-12">
+            <Swiper
+              modules={[Autoplay, Pagination]}
+              spaceBetween={24}
+              slidesPerView={1}
+              loop={reviews.length > 3}
+              speed={800}
+              autoplay={{
+                delay: 3500,
+                disableOnInteraction: false,
+                pauseOnMouseEnter: true,
+              }}
+              pagination={{
+                clickable: true,
+              }}
+              breakpoints={{
+                640: {
+                  slidesPerView: 1,
+                },
+                768: {
+                  slidesPerView: 2,
+                },
+                1180: {
+                  slidesPerView: 3,
+                },
+              }}
+              className="adlume-review-swiper pb-14"
+            >
+              {reviews.map((review) => (
+                <SwiperSlide key={review._id} className="h-auto">
+                  <ReviewCard
+                    review={review}
+                    onReadMore={setSelectedReview}
+                  />
+                </SwiperSlide>
+              ))}
+            </Swiper>
+          </div>
+        )}
+
+        {!isLoading && !errorMessage && reviews.length === 0 && (
+          <div
+            className="mt-12 rounded-4xl border p-10 text-center"
+            style={{
+              borderColor: "var(--border)",
+              background: "var(--card)",
+            }}
+          >
+            <h3 className="text-2xl font-black">No reviews found</h3>
+
+            <p
+              className="mt-3 text-sm leading-7"
+              style={{ color: "var(--text-muted)" }}
+            >
+              Add featured reviews from the backend to show them here.
+            </p>
+          </div>
+        )}
       </div>
 
       {selectedReview && (
@@ -236,14 +271,12 @@ export default function ClientFeedbackSection() {
             </button>
 
             <div className="flex items-center gap-3 pr-12">
-              <div className="relative">
-                <div className="flex h-14 w-14 items-center justify-center rounded-full bg-linear-to-br from-[#0080E0] to-[#00B0F0] text-base font-black text-white">
-                  {selectedReview.name
-                    .split(" ")
-                    .map((word) => word[0])
-                    .join("")
-                    .slice(0, 2)}
-                </div>
+              <div className="flex h-14 w-14 items-center justify-center rounded-full bg-linear-to-br from-[#0080E0] to-[#00B0F0] text-base font-black text-white">
+                {selectedReview.name
+                  .split(" ")
+                  .map((word) => word[0])
+                  .join("")
+                  .slice(0, 2)}
               </div>
 
               <div>
@@ -270,6 +303,11 @@ export default function ClientFeedbackSection() {
             >
               {selectedReview.feedback}
             </p>
+
+            <div className="mt-7 flex items-center gap-2 text-sm font-black text-[#00B0F0]">
+              <CheckCircle2 size={18} />
+              Verified client feedback
+            </div>
           </div>
         </div>
       )}

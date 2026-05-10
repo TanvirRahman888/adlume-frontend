@@ -1,46 +1,7 @@
 "use client";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PortfolioCard from "./PortfolioCard";
-
-const projects = [
-  {
-    title: "Fresh & Healthy Food Design",
-    category: "Social Media Design",
-    image: "/images/projects/project-1.png",
-    href: "/portfolio",
-  },
-  {
-    title: "Shoe Sale Campaign",
-    category: "Facebook Ad Campaign",
-    image: "/images/projects/project-2.png",
-    href: "/portfolio",
-  },
-  {
-    title: "Interior Design Website",
-    category: "Website Design",
-    image: "/images/projects/project-3.png",
-    href: "/portfolio",
-  },
-  {
-    title: "Burger Weekend Special",
-    category: "Social Media Design",
-    image: "/images/projects/project-4.png",
-    href: "/portfolio",
-  },
-  {
-    title: "Travel Website Design",
-    category: "Website Development",
-    image: "/images/projects/project-5.png",
-    href: "/portfolio",
-  },
-  {
-    title: "Digital Marketing Landing Page",
-    category: "Landing Page Design",
-    image: "/images/projects/project-6.png",
-    href: "/portfolio",
-  },
-];
 
 const categories = [
   "All Projects",
@@ -53,11 +14,46 @@ const categories = [
 
 export default function PortfolioGrid() {
   const [activeCategory, setActiveCategory] = useState("All Projects");
+  const [projects, setProjects] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [errorMessage, setErrorMessage] = useState("");
 
-  const filteredProjects =
-    activeCategory === "All Projects"
-      ? projects
-      : projects.filter((project) => project.category === activeCategory);
+  useEffect(() => {
+    async function fetchProjects() {
+      try {
+        setIsLoading(true);
+        setErrorMessage("");
+
+        const query =
+          activeCategory === "All Projects"
+            ? ""
+            : `?category=${encodeURIComponent(activeCategory)}`;
+
+        const response = await fetch(
+          `${process.env.NEXT_PUBLIC_API_URL}/api/projects${query}`,
+          {
+            cache: "no-store",
+          }
+        );
+
+        const data = await response.json();
+
+        if (!response.ok) {
+          throw new Error(data?.message || "Failed to fetch projects.");
+        }
+
+        setProjects(data.projects || []);
+      } catch (error) {
+        setErrorMessage(
+          error.message || "Something went wrong while loading projects."
+        );
+      } finally {
+        setIsLoading(false);
+      }
+    }
+
+    fetchProjects();
+  }, [activeCategory]);
 
   return (
     <section className="relative overflow-hidden py-20 sm:py-24">
@@ -126,23 +122,65 @@ export default function PortfolioGrid() {
           className="mt-6 text-center text-sm font-bold"
           style={{ color: "var(--text-muted)" }}
         >
-          Showing {filteredProjects.length}{" "}
-          {filteredProjects.length === 1 ? "project" : "projects"}
+          {isLoading
+            ? "Loading projects..."
+            : `Showing ${projects.length} ${
+                projects.length === 1 ? "project" : "projects"
+              }`}
         </p>
 
-        <div className="mt-10 grid gap-6 sm:grid-cols-2 xl:grid-cols-3 xl:gap-7">
-          {filteredProjects.map((project) => (
-            <PortfolioCard
-              key={project.title}
-              title={project.title}
-              category={project.category}
-              image={project.image}
-              href={project.href}
-            />
-          ))}
-        </div>
+        {errorMessage && (
+          <div
+            className="mx-auto mt-10 max-w-2xl rounded-4xl border p-6 text-center"
+            style={{
+              borderColor: "var(--border)",
+              background: "var(--card)",
+            }}
+          >
+            <h3 className="text-xl font-black text-[#F08000]">
+              Failed to load projects
+            </h3>
 
-        {filteredProjects.length === 0 && (
+            <p
+              className="mt-3 text-sm leading-7"
+              style={{ color: "var(--text-muted)" }}
+            >
+              {errorMessage}
+            </p>
+          </div>
+        )}
+
+        {isLoading && (
+          <div className="mt-10 grid gap-6 sm:grid-cols-2 xl:grid-cols-3 xl:gap-7">
+            {Array.from({ length: 6 }).map((_, index) => (
+              <div
+                key={index}
+                className="h-105 animate-pulse rounded-4xl border"
+                style={{
+                  borderColor: "var(--border)",
+                  background:
+                    "color-mix(in srgb, var(--card) 85%, transparent)",
+                }}
+              />
+            ))}
+          </div>
+        )}
+
+        {!isLoading && !errorMessage && projects.length > 0 && (
+          <div className="mt-10 grid gap-6 sm:grid-cols-2 xl:grid-cols-3 xl:gap-7">
+            {projects.map((project) => (
+              <PortfolioCard
+                key={project._id}
+                title={project.title}
+                category={project.category}
+                image={project.image}
+                href={`/portfolio/${project.slug}`}
+              />
+            ))}
+          </div>
+        )}
+
+        {!isLoading && !errorMessage && projects.length === 0 && (
           <div
             className="mt-14 rounded-4xl border p-10 text-center"
             style={{
