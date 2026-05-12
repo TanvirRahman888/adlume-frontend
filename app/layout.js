@@ -1,3 +1,4 @@
+import { AuthProvider } from "@/context/AuthContext";
 import Navbar from "@/components/Navbar";
 import "./globals.css";
 import ThemeProvider from "@/components/ThemeProvider";
@@ -13,11 +14,13 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en" suppressHydrationWarning>
       <body>
-        <ThemeProvider>
-          <Navbar />
-          {children}
-          <Footer />
-        </ThemeProvider>
+        <AuthProvider>
+          <ThemeProvider>
+            <Navbar />
+            {children}
+            <Footer />
+          </ThemeProvider>
+        </AuthProvider>
       </body>
     </html>
   );
