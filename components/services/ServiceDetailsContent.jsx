@@ -1,8 +1,15 @@
 import { CheckCircle2, CircleHelp, ListChecks, Sparkles } from "lucide-react";
+import ServicePackages from "./ServicePackages";
 
 export default function ServiceDetailsContent({ service }) {
+  const features = service.features || [];
+  const benefits = service.benefits || [];
+  const process = service.process || [];
+  const faqs = service.faqs || [];
+
   return (
     <>
+      {/* Features Section */}
       <section className="relative overflow-hidden py-20 sm:py-24">
         <div className="pointer-events-none absolute left-1/2 top-1/2 h-120 w-120 -translate-x-1/2 -translate-y-1/2 rounded-full bg-[#0080E0]/5 blur-3xl" />
 
@@ -35,7 +42,7 @@ export default function ServiceDetailsContent({ service }) {
             </div>
 
             <div className="grid gap-4 sm:grid-cols-2 lg:col-span-2">
-              {service.features.map((feature) => (
+              {features.map((feature) => (
                 <div
                   key={feature}
                   className="group rounded-3xl border p-5 transition duration-300 hover:-translate-y-1 hover:shadow-xl"
@@ -49,6 +56,7 @@ export default function ServiceDetailsContent({ service }) {
                     className="text-[#00B0F0]"
                     strokeWidth={2.5}
                   />
+
                   <h3 className="mt-4 text-base font-black">{feature}</h3>
                 </div>
               ))}
@@ -57,6 +65,7 @@ export default function ServiceDetailsContent({ service }) {
         </div>
       </section>
 
+      {/* Benefits Section */}
       <section
         className="relative overflow-hidden py-20 sm:py-24"
         style={{ background: "var(--background-secondary)" }}
@@ -94,7 +103,7 @@ export default function ServiceDetailsContent({ service }) {
               </div>
 
               <div className="grid gap-4 sm:grid-cols-2">
-                {service.benefits.map((benefit) => (
+                {benefits.map((benefit) => (
                   <div
                     key={benefit}
                     className="rounded-3xl border p-5"
@@ -108,6 +117,7 @@ export default function ServiceDetailsContent({ service }) {
                       className="text-[#F08000]"
                       strokeWidth={2.5}
                     />
+
                     <p
                       className="mt-4 text-sm font-bold leading-7"
                       style={{ color: "var(--text-muted)" }}
@@ -122,6 +132,7 @@ export default function ServiceDetailsContent({ service }) {
         </div>
       </section>
 
+      {/* Process Section */}
       <section className="relative overflow-hidden py-20 sm:py-24">
         <div className="relative mx-auto w-full max-w-360 px-4 sm:px-6 lg:px-10">
           <div className="mx-auto max-w-3xl text-center">
@@ -134,6 +145,7 @@ export default function ServiceDetailsContent({ service }) {
               }}
             >
               <ListChecks size={17} className="text-[#0080E0]" />
+
               <p className="text-sm font-black uppercase tracking-[0.25em] text-[#0080E0]">
                 Our Process
               </p>
@@ -145,7 +157,7 @@ export default function ServiceDetailsContent({ service }) {
           </div>
 
           <div className="mt-14 grid gap-5 md:grid-cols-2 xl:grid-cols-5">
-            {service.process.map((item, index) => (
+            {process.map((item, index) => (
               <div
                 key={item}
                 className="group relative flex h-full min-h-57.5 flex-col rounded-4xl border p-6 transition duration-300 hover:-translate-y-2 hover:shadow-xl"
@@ -156,7 +168,7 @@ export default function ServiceDetailsContent({ service }) {
                 }}
               >
                 <span className="text-sm font-black text-[#00B0F0]">
-                  0{index + 1}
+                  {String(index + 1).padStart(2, "0")}
                 </span>
 
                 <p
@@ -175,54 +187,58 @@ export default function ServiceDetailsContent({ service }) {
         </div>
       </section>
 
-      <section
-        className="relative overflow-hidden py-20 sm:py-24"
-        style={{ background: "var(--background-secondary)" }}
-      >
-        <div className="mx-auto w-full max-w-360 px-4 sm:px-6 lg:px-10">
-          <div className="mx-auto max-w-3xl text-center">
-            <div
-              className="inline-flex items-center justify-center gap-2 rounded-full border px-5 py-2"
-              style={{
-                borderColor: "var(--border)",
-                background:
-                  "color-mix(in srgb, var(--card) 80%, transparent)",
-              }}
-            >
-              <CircleHelp size={17} className="text-[#F08000]" />
-              <p className="text-sm font-black uppercase tracking-[0.25em] text-[#F08000]">
-                FAQ
-              </p>
-            </div>
+      {/* Packages Section */}
+      <ServicePackages service={service} />
 
-            <h2 className="mt-5 text-4xl font-black leading-tight md:text-5xl">
-              Frequently Asked Questions
-            </h2>
-          </div>
-
-          <div className="mx-auto mt-12 grid max-w-4xl gap-5">
-            {service.faqs.map((faq) => (
+      {/* FAQ Section */}
+      {faqs.length > 0 && (
+        <section className="relative overflow-hidden py-20 sm:py-24">
+          <div className="mx-auto w-full max-w-360 px-4 sm:px-6 lg:px-10">
+            <div className="mx-auto max-w-3xl text-center">
               <div
-                key={faq.question}
-                className="rounded-4xl border p-6"
+                className="inline-flex items-center justify-center gap-2 rounded-full border px-5 py-2"
                 style={{
                   borderColor: "var(--border)",
-                  background: "var(--card)",
+                  background:
+                    "color-mix(in srgb, var(--card) 80%, transparent)",
                 }}
               >
-                <h3 className="text-lg font-black">{faq.question}</h3>
+                <CircleHelp size={17} className="text-[#F08000]" />
 
-                <p
-                  className="mt-3 text-sm leading-7"
-                  style={{ color: "var(--text-muted)" }}
-                >
-                  {faq.answer}
+                <p className="text-sm font-black uppercase tracking-[0.25em] text-[#F08000]">
+                  FAQ
                 </p>
               </div>
-            ))}
+
+              <h2 className="mt-5 text-4xl font-black leading-tight md:text-5xl">
+                Frequently Asked Questions
+              </h2>
+            </div>
+
+            <div className="mx-auto mt-12 grid max-w-4xl gap-5">
+              {faqs.map((faq) => (
+                <div
+                  key={faq.question}
+                  className="rounded-4xl border p-6"
+                  style={{
+                    borderColor: "var(--border)",
+                    background: "var(--card)",
+                  }}
+                >
+                  <h3 className="text-lg font-black">{faq.question}</h3>
+
+                  <p
+                    className="mt-3 text-sm leading-7"
+                    style={{ color: "var(--text-muted)" }}
+                  >
+                    {faq.answer}
+                  </p>
+                </div>
+              ))}
+            </div>
           </div>
-        </div>
-      </section>
+        </section>
+      )}
     </>
   );
 }
