@@ -22,8 +22,7 @@ export default function ServicePackages({ service }) {
             className="inline-flex items-center justify-center gap-2 rounded-full border px-5 py-2"
             style={{
               borderColor: "var(--border)",
-              background:
-                "color-mix(in srgb, var(--card) 80%, transparent)",
+              background: "color-mix(in srgb, var(--card) 80%, transparent)",
             }}
           >
             <PackageCheck size={17} className="text-[#00B0F0]" />
@@ -51,6 +50,7 @@ export default function ServicePackages({ service }) {
             <ServicePackageCard
               key={item.name}
               serviceTitle={service.title}
+              serviceSlug={service.slug}
               packageItem={item}
             />
           ))}
@@ -60,9 +60,7 @@ export default function ServicePackages({ service }) {
   );
 }
 
-function ServicePackageCard({ serviceTitle, packageItem }) {
-  const whatsappText = `Hello Adlume Media, I am interested in the ${packageItem.name} package for ${serviceTitle}. Please share the details.`;
-
+function ServicePackageCard({ serviceTitle, serviceSlug, packageItem }) {
   return (
     <div
       className="group relative flex h-full flex-col overflow-hidden rounded-4xl border p-6 transition duration-300 hover:-translate-y-2 hover:shadow-2xl"
@@ -94,9 +92,7 @@ function ServicePackageCard({ serviceTitle, packageItem }) {
         </p>
 
         <div className="mt-6 flex items-end gap-2">
-          <p className="text-4xl font-black md:text-5xl">
-            {packageItem.price}
-          </p>
+          <p className="text-4xl font-black md:text-5xl">{packageItem.price}</p>
 
           <p
             className="pb-2 text-sm font-bold capitalize"
@@ -132,11 +128,9 @@ function ServicePackageCard({ serviceTitle, packageItem }) {
 
         <div className="mt-auto pt-8">
           <Link
-            href={`https://wa.me/8801761784780?text=${encodeURIComponent(
-              whatsappText
+            href={`/order?service=${serviceSlug}&package=${encodeURIComponent(
+              packageItem.name,
             )}`}
-            target="_blank"
-            rel="noopener noreferrer"
             className="group/button relative inline-flex h-12 w-full items-center justify-center overflow-hidden rounded-full bg-linear-to-r from-[#F08000] to-[#F0B000] px-6 text-sm font-black text-[#000513] shadow-lg transition duration-300 hover:scale-105"
           >
             <span className="absolute inset-0 translate-y-full bg-linear-to-r from-[#0080E0] to-[#00B0F0] transition duration-300 group-hover/button:translate-y-0" />
