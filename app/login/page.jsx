@@ -2,11 +2,11 @@
 
 import Link from "next/link";
 import { useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
+import { Suspense, useState } from "react";
 import { Eye, EyeOff, Loader2, LogIn } from "lucide-react";
 import { useAuth } from "@/context/AuthContext";
 
-export default function LoginPage() {
+function LoginContent() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -184,12 +184,14 @@ export default function LoginPage() {
               className="h-px flex-1"
               style={{ background: "var(--border)" }}
             />
+
             <span
               className="text-xs font-black uppercase tracking-[0.2em]"
               style={{ color: "var(--text-muted)" }}
             >
               Or
             </span>
+
             <div
               className="h-px flex-1"
               style={{ background: "var(--border)" }}
@@ -221,5 +223,24 @@ export default function LoginPage() {
         </div>
       </div>
     </main>
+  );
+}
+
+function LoginFallback() {
+  return (
+    <main className="flex min-h-screen items-center justify-center px-4">
+      <div className="flex items-center gap-3 text-sm font-black text-[#00B0F0]">
+        <Loader2 size={20} className="animate-spin" />
+        Loading login page...
+      </div>
+    </main>
+  );
+}
+
+export default function LoginPage() {
+  return (
+    <Suspense fallback={<LoginFallback />}>
+      <LoginContent />
+    </Suspense>
   );
 }
